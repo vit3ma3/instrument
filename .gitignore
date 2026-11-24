@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.venv/
+.pdf-tools/
+build/
+dist/
+.coverage
+htmlcov/
+.DS_Store
+.idea/
+.vscode/
+*.pdf
+output.xml
