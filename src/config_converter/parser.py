@@ -3,8 +3,10 @@
 from typing import TypeAlias, cast
 
 from lark import Lark, Token, Transformer, UnexpectedInput
+from lark.exceptions import VisitError
 
 from config_converter.errors import (
+    ConfigError,
     ConfigSyntaxError,
     DuplicateConstantError,
     DuplicateKeyError,
@@ -21,8 +23,8 @@ const_decl: "var" NAME "=" value
       | dictionary
       | const_ref
 number: NUMBER
-array: "{" [value ("," value)*] "}"
-dictionary: "$[" [entry ("," entry)*] "]"
+array: "{" (value ("," value)*)? "}"
+dictionary: "$[" (entry ("," entry)*)? "]"
 entry: NAME ":" value
 const_ref: "@(" NAME ")"
 NUMBER: /\d+/
@@ -97,5 +99,10 @@ def parse_config(text: str) -> ConfigValue:
             getattr(error, "column", None),
             expected,
         ) from error
-    result = ConfigTransformer().transform(tree)
+    try:
+        result = ConfigTransformer().transform(tree)
+    except VisitError as error:
+        if isinstance(error.orig_exc, ConfigError):
+            raise error.orig_exc from error
+        raise
     return cast(ConfigValue, result)
