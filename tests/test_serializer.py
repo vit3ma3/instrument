@@ -1,7 +1,7 @@
 """Тесты представления чисел, массивов и словарей в XML."""
 
 import unittest
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as element_tree
 
 from config_converter.serializer import to_xml
 
@@ -19,7 +19,7 @@ class SerializerTests(unittest.TestCase):
         self.assertEqual(to_xml(42), expected)
 
     def test_empty_collections(self) -> None:
-        root = ET.fromstring(to_xml([[], {}]))
+        root = element_tree.fromstring(to_xml([[], {}]))
         array = root.find("array")
         self.assertIsNotNone(array)
         self.assertIsNotNone(array.find("array"))
@@ -27,7 +27,7 @@ class SerializerTests(unittest.TestCase):
 
     def test_nested_dictionary(self) -> None:
         value = {"items": [1, {"inner": [2]}]}
-        root = ET.fromstring(to_xml(value))
+        root = element_tree.fromstring(to_xml(value))
         entry = root.find("dictionary/entry[@name='items']")
         self.assertIsNotNone(entry)
         number = entry.find("array/number")

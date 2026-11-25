@@ -3,7 +3,7 @@
 import io
 import tempfile
 import unittest
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as element_tree
 from contextlib import redirect_stderr
 from pathlib import Path
 
@@ -28,7 +28,7 @@ class CliTests(unittest.TestCase):
         source = self.write_source("$[value: 42]")
         output = self.directory / "nested" / "result.xml"
         convert_file(source, output)
-        root = ET.parse(output).getroot()
+        root = element_tree.parse(output).getroot()
         entry = root.find("dictionary/entry[@name='value']")
         self.assertEqual(entry.find("number").text, "42")
 

@@ -1,7 +1,7 @@
 """Проверка двух полноценных конфигураций из разных предметных областей."""
 
 import unittest
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as element_tree
 from pathlib import Path
 
 from config_converter.parser import parse_config
@@ -35,7 +35,7 @@ class ExampleTests(unittest.TestCase):
         for path in sorted(EXAMPLES_DIR.glob("*.cfg")):
             with self.subTest(example=path.name):
                 value = self.parse_example(path.name)
-                root = ET.fromstring(to_xml(value))
+                root = element_tree.fromstring(to_xml(value))
                 self.assertEqual(root.tag, "config")
                 self.assertIsNotNone(root.find("dictionary"))
 
